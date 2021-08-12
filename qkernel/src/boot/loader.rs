@@ -184,12 +184,10 @@ impl Loader {
     pub fn LoadRootProcess(&self, procArgs: &mut CreateProcessArgs) -> Result<(i32, u64, u64, u64)>  {
         let task = Task::Current();
         task.creds = procArgs.Credentials.clone();
-        error!("load root process 1");
         let kernel = self.Lock(task)?.kernel.clone();
         let (tg, tid) = kernel.CreateProcess(procArgs)?;
         let paths = GetPath(&procArgs.Envv);
         procArgs.Filename = task.mountNS.ResolveExecutablePath(task, &procArgs.WorkingDirectory, &procArgs.Filename, &paths)?;
-        error!("load root process 2");
         let mut ttyFileOps = None;
         if procArgs.Terminal {
             let file = task.NewFileFromHostFd(0, procArgs.Stdiofds[0], true)
@@ -207,7 +205,6 @@ impl Loader {
         } else {
             task.NewStdFds(&procArgs.Stdiofds[..], false).expect("Task: create std fds");
         }
-        error!("load root process 3");
         GetKernel().Start()?;
 
         //task.NewStdFds(&procArgs.Stdiofds[..], procArgs.Terminal).expect("Task: create std fds");
@@ -220,7 +217,6 @@ impl Loader {
         //self.processes.insert(ExecID{cid: procArgs.ContainerID.to_string(), pid: tid}, execProc);
         //for the root container, the tid is always 0,
         self.Lock(task)?.processes.insert(0, execProc);
-        error!("load root process 4");
         let (entry, userStackAddr, kernelStackAddr) = kernel.LoadProcess(&procArgs.Filename, &procArgs.Envv, &mut procArgs.Argv)?;
         return Ok((tid, entry, userStackAddr, kernelStackAddr))
     }
