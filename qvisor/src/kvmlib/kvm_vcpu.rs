@@ -122,6 +122,16 @@ impl Allocator for SimplePageAllocator {
         return Ok(current)
     }
 
+    fn Alloc1GPage(&self, _incrRef: bool) -> Result<u64> {
+        let current = self.next.load(Ordering::SeqCst);
+        if current == self.end {
+            panic!("SimplePageAllocator Out Of Memory")
+        }
+
+        self.next.fetch_add(MemoryDef::HUGE_PAGE_SIZE_1G, Ordering::SeqCst);
+        return Ok(current)
+    }
+
     fn FreePage(&self, _addr: u64) -> Result<()> {
         panic!("SimplePageAllocator doesn't support FreePage");
     }

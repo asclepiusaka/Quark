@@ -2682,8 +2682,9 @@ impl MemoryDef {
 
     pub const DEFAULT_STACK_PAGES: u64 = 16;
     pub const DEFAULT_STACK_SIZE: u64 = Self::DEFAULT_STACK_PAGES * Self::PAGE_SIZE;  //64 KB
-    pub const PAGE_SIZE: u64 = 1 << 12;//0x1000;
+    pub const PAGE_SIZE: u64 = 1 << Self::PAGE_SHIFT;//0x1000;
     pub const HUGE_PAGE_SIZE: u64 = 1 << Self::HUGE_PAGE_SHIFT;//0x1000;
+    pub const HUGE_PAGE_SIZE_1G: u64 = 1 << 30;
     pub const PAGE_MASK: u64 = Self::PAGE_SIZE - 1;
 
     pub const PAGE_SIZE_4K: u64 = 1 << Self::PAGE_SHIFT;//0x1000;

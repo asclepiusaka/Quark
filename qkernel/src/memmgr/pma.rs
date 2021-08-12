@@ -120,6 +120,10 @@ impl Allocator for PageMgr {
     fn ZeroPage(&self) -> u64 {
         return self.lock().allocator.lock().GetZeroPage();
     }
+
+    fn Alloc1GPage(&self, incrRef: bool) -> Result<u64> {
+        panic!("not implemented")
+    }
 }
 
 extern "C" {

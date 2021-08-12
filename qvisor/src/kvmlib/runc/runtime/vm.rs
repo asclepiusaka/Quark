@@ -195,7 +195,7 @@ impl VirtualMachine {
         let bootstrapMem;
 
         {
-            let memOrd = KERNEL_HEAP_ORD; // 8GB
+            let memOrd = KERNEL_HEAP_ORD; // 4GB
             let kernelMemSize = 1 << memOrd;
             //pageMmap = KVMMachine::initKernelMem(&vm_fd, MemoryDef::PHY_LOWER_ADDR  + 64 * MemoryDef::ONE_MB, kernelMemSize)?;
             //pageAllocatorBaseAddr = pageMmap.as_ptr() as u64;
@@ -215,7 +215,7 @@ impl VirtualMachine {
             vms.pageTables = PageTables::New(vms.allocator.as_ref().unwrap())?;
 
             info!("the pageAllocatorBaseAddr is {:x}, the end of pageAllocator is {:x}", pageAllocatorBaseAddr, pageAllocatorBaseAddr + kernelMemSize);
-            vms.KernelMap(addr::Addr(pageAllocatorBaseAddr), addr::Addr(pageAllocatorBaseAddr + kernelMemSize), addr::Addr(pageAllocatorBaseAddr),
+            vms.KernelMapHugeTable(addr::Addr(pageAllocatorBaseAddr), addr::Addr(pageAllocatorBaseAddr + kernelMemSize), addr::Addr(pageAllocatorBaseAddr),
                           addr::PageOpts::Zero().SetPresent().SetWrite().SetGlobal().Val())?;
             autoStart = args.AutoStart;
             vms.pivot = args.Pivot;

@@ -125,6 +125,10 @@ impl Allocator for MemAllocator {
         return res
     }
 
+    fn Alloc1GPage(&self, _incrRef: bool) -> Result<u64> {
+        panic!("MemAllocator doesn't support hugepage yet");
+    }
+
     fn FreePage(&self, addr: u64) -> Result<()> {
         ZeroPage(addr);
         return self.lock().Free(addr, 1)
@@ -133,6 +137,7 @@ impl Allocator for MemAllocator {
     fn ZeroPage(&self) -> u64 {
         panic!("MemAllocator doesn't support zeropage");
     }
+
 }
 
 impl MemAllocator {
